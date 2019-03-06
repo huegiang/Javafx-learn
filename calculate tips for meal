@@ -1,0 +1,86 @@
+
+//CS2450
+//Assignment 1
+//Date 2/27/2019
+
+import javafx.application.Application;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
+import javafx.geometry.*;
+import java.util.*;
+
+public class TaskA extends Application {
+
+    private Label resultLabel1;
+    private Label resultLabel2;
+    private Label totalLabel;
+    private TextField foodChargeTF;
+
+    public static void main(String[] args)
+    {
+      // Launch the application.
+      launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage)
+    {
+        foodChargeTF = new TextField();
+        resultLabel1 = new Label();
+        resultLabel2 = new Label();
+        totalLabel = new Label();
+      
+        
+        Label textfieldLabel = new Label("Enter food charge for meal:  ");
+
+        //Register event handler
+        Button myButton = new Button("Calculate");
+        myButton.setOnAction(new CalcButtonHandler());
+
+        //Components of Scene
+        HBox hbox = new HBox(20,textfieldLabel,foodChargeTF);
+        VBox vbox = new VBox(10,hbox,myButton,resultLabel1,resultLabel2,totalLabel);
+      
+        //Setting size 
+        foodChargeTF.setPrefSize(200,30);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setPadding(new Insets(20));
+
+        //Scene to Stage
+        Scene myScene = new Scene(vbox);
+        primaryStage.setTitle("Task A");
+        primaryStage.setScene(myScene);
+        primaryStage.show();
+    }
+
+    class CalcButtonHandler implements EventHandler<ActionEvent>
+    {
+       @Override
+       public void handle(ActionEvent event)
+       {
+          // Get the kilometers.
+          int foodCharge = Integer.parseInt(foodChargeTF.getText());
+          
+          //Percent tip
+          Double percentTip = (double)foodCharge * 0.18;
+          
+          //percent sales tax
+          Double salesTax = (double)foodCharge * 0.07;
+
+          // Display the results.
+          resultLabel1.setText(String.format("Tip: $%.2f ", percentTip));
+          resultLabel2.setText(String.format("Sales tax: $%.2f", salesTax));
+
+          Double total= salesTax + percentTip + foodCharge;
+          totalLabel.setText(String.format("Total: $%.2f",total));
+        
+       }
+    }
+}
