@@ -1,0 +1,176 @@
+
+//CS2450
+//Assignment 2
+//Date 3/8/2019
+
+import javafx.application.Application;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
+import javafx.geometry.Insets;
+
+public class SkateboardDesigner extends Application{
+   
+    Scene scene1;
+    private Label outputLabel1, outputLabel2;
+    private Label outputLabel3, outputLabel4;
+    private String result1, result2;
+    private String result3, result4;
+    private Label subtotalLabel, saleTaxLabel, totalLabel;
+   
+    public static void main(String[] args){
+        launch(args);
+    }
+    
+    @Override
+    public void start(Stage primaryStage){
+        
+        //Label for each comboBox
+        Label myLabel1 = new Label("Decks");
+        Label myLabel2 = new Label("Truck Assemblies");
+        Label myLabel3 = new Label("Wheels");
+        Label myLabel4 = new Label("Miscellaneous");
+
+        //Create button and register event handler
+        Button myButton = new Button("Total of order");
+        myButton.setOnAction(new CalcButtonHandler());
+
+        // Create a Label.
+        outputLabel1 = new Label(); outputLabel2 = new Label();
+        outputLabel3 = new Label(); outputLabel4 = new Label(); 
+        subtotalLabel = new Label(); saleTaxLabel = new Label();
+        totalLabel = new Label();       
+        
+        // Register an event handler for the ComboBox.
+        //Create a ComboBox
+        ComboBox<String> comboBox1 = new ComboBox<>();
+        comboBox1.getItems().addAll("The Master Thrasher", "The Dictator",
+                                     "The Street King");
+        comboBox1.setOnAction(event -> {
+            String output = comboBox1.getValue().toString();
+            result1 = (output == "The Master Thrasher") ? "$60" : 
+                ((output == "The Dictator" ) ? "$45" : "$50");
+            outputLabel1.setText(result1);
+        });
+
+        ComboBox<String> comboBox2 = new ComboBox<>();                            
+        comboBox2.getItems().addAll("7.75-inch axle", "8-inch axle",
+                                    "8.5-inch axle");
+        comboBox2.setOnAction(event -> {
+            String output = comboBox2.getValue().toString();
+            result2 = (output == "7.75-inch axle") ? "$35" : 
+                                ((output == "8-inch axle" ) ? "$40" : "$45");
+            outputLabel2.setText(result2);
+        });
+
+        ComboBox<String> comboBox3 = new ComboBox<>();
+        comboBox3.getItems().addAll("51 mm", "55 mm", "58 mm", "61 mm");
+        comboBox3.setOnAction(event -> {
+            String outputText = comboBox3.getValue().toString();           
+            if(outputText == "51 mm")
+                result3 = "$20";
+            else if(outputText == "55 mm")
+                result3 = "$22";
+            else if(outputText == "58 mm")
+                result3 = "$24";
+            else 
+                result3 = "$28";
+            outputLabel3.setText(result3);
+        });
+
+        ComboBox<String> comboBox4 = new ComboBox<>();
+        comboBox4.getItems().addAll("Grip tape", "Bearings", "Riser pads",
+                                    "Nuts and bolts kit");
+        comboBox4.setOnAction(event -> {
+            String outputText = comboBox4.getValue().toString();           
+            switch(outputText){
+                case "Grip tape":
+                    result4 = "$10"; break;
+                case "Bearings":
+                    result4 = "$30"; break;
+                case "Riser pads":
+                    result4 = "$2"; break;
+                case "Nuts and bolts kit":
+                    result4 = "$3"; break;
+            }
+            outputLabel4.setText(result4);
+        });
+        
+        //Create HBox
+        HBox hbox1 = new HBox(90, myLabel1, comboBox1);
+        HBox hbox2 = new HBox(15, myLabel2, comboBox2);
+        HBox hbox3 = new HBox(80, myLabel3, comboBox3);
+        HBox hbox4 = new HBox(35, myLabel4, comboBox4);
+        HBox mybuttonBox = new HBox(myButton);
+        mybuttonBox.setAlignment(Pos.CENTER);
+
+        //Create VBox
+        VBox vbox1 = new VBox(20, hbox1, hbox2, hbox3, hbox4, mybuttonBox);
+        VBox vbox2 = new VBox(30, outputLabel1, outputLabel2,outputLabel3,outputLabel4);
+        VBox vboxResult = new VBox(10, subtotalLabel, saleTaxLabel, totalLabel);
+        vbox1.setPadding(new Insets(10));
+        vbox2.setPadding(new Insets(20));
+        vboxResult.setPadding(new Insets(10));
+        mybuttonBox.setPadding(new Insets(10));
+        vboxResult.setAlignment(Pos.CENTER);
+
+        //vbox1.setAlignment(Pos.CENTER);
+        comboBox1.setMinWidth(190); 
+        comboBox2.setMinWidth(190); 
+        comboBox3.setMinWidth(190); 
+        comboBox4.setMinWidth(190); 
+
+        //Scene to the Stage
+        GridPane gridPane = new GridPane();
+        gridPane.add(vbox1, 0, 0);  
+        gridPane.add(vbox2, 1, 0, 1, 1);
+        gridPane.add(mybuttonBox, 0, 1, 2, 1);
+        gridPane.add(vboxResult, 0, 2, 2, 1);
+
+        gridPane.setPadding(new Insets(30,10,10,10));
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+       
+
+        scene1 = new Scene(gridPane, 460, 410);
+       
+        primaryStage.setScene(scene1);
+        primaryStage.setTitle("Task A Skateboard Designer");
+        primaryStage.show();
+  
+    }
+
+    class CalcButtonHandler implements EventHandler<ActionEvent>
+    {
+       @Override
+       public void handle(ActionEvent event)
+       {    
+            String s1 = result1.replace("$","");
+            int deckPrice = Integer.parseInt(s1);
+           
+            String s2 = result2.replace("$","");
+            int truckAssembliesPrice = Integer.parseInt(s2);
+            
+            String s3 = result3.replace("$","");
+            int wheelPrice = Integer.parseInt(s3);
+
+            String s4 = result4.replace("$","");
+            int otherPrice = Integer.parseInt(s4);
+
+            int subtotal = deckPrice + truckAssembliesPrice + wheelPrice + otherPrice;
+            double saleTax = (double)subtotal * 0.07;
+            double total = saleTax + subtotal;
+            
+            subtotalLabel.setText(String.format("Subtotal: $%d" , subtotal));
+            saleTaxLabel.setText(String.format("Sales Tax: $%.2f" , saleTax));
+            totalLabel.setText(String.format("Total of order: $%.2f" , total));
+
+        }
+            
+    }
+    
+}
